@@ -13,16 +13,14 @@ use Symfony\Component\HttpFoundation\Response;
 class SmsController
 {
 
-    public function send()
+    public function send(Request $request)
     {
-        $request = Request::createFromGlobals();
-
         $response = new JsonResponse(
             ['number' => $request->query->get('number')],
             Response::HTTP_OK,
             ['content-type' => 'application/json']
         );
-        $response->send();
+        return $response;
     }
 
 }
