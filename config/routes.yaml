@@ -1,0 +1,3 @@
+sms_send:
+    path:     /sms/send
+    defaults: { controller: 'App\Controllers\SmsController', method: 'send' }
