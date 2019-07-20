@@ -89,7 +89,7 @@ class SmsController
                 ->get()->toArray();
         });
         $smsApis = Cache::get('SMS_APIS');
-        Arr::sort($array);
+        Arr::sort($smsApis);
 
         return new Response(Template::render('report.php', [
             'number' => $number,
