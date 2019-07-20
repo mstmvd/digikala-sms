@@ -18,4 +18,8 @@ class SmsLog extends Model
     protected $guarded = [];
     protected $fillable = ['sms_id', 'api', 'status', 'call_at'];
 
+    public function sms()
+    {
+        return $this->belongsTo(Sms::class);
+    }
 }

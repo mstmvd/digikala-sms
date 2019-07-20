@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-  "hash": "597ccabd5c85c9577446939b71f870e3",
-  "content-hash": "0d0bccd8fb7a7de3e77f9c5551594ba5",
+  "hash": "64707f3c7c417a82375ad494ce0aa83f",
+  "content-hash": "571c47933007b3a9ed09cb96427d31c6",
     "packages": [
         {
           "name": "doctrine/inflector",
@@ -848,45 +848,24 @@
             "time": "2019-06-19 15:27:09"
         },
         {
-          "name": "symfony/dependency-injection",
+          "name": "symfony/dotenv",
           "version": "v4.3.2",
           "source": {
             "type": "git",
-            "url": "https://github.com/symfony/dependency-injection.git",
-            "reference": "b851928be349c065197fdc0832f78d85139e3903"
+            "url": "https://github.com/symfony/dotenv.git",
+            "reference": "c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb"
           },
           "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/b851928be349c065197fdc0832f78d85139e3903",
-            "reference": "b851928be349c065197fdc0832f78d85139e3903",
+            "url": "https://api.github.com/repos/symfony/dotenv/zipball/c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb",
+            "reference": "c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb",
             "shasum": ""
           },
           "require": {
-            "php": "^7.1.3",
-            "psr/container": "^1.0",
-            "symfony/service-contracts": "^1.1.2"
-          },
-          "conflict": {
-            "symfony/config": "<4.3",
-            "symfony/finder": "<3.4",
-            "symfony/proxy-manager-bridge": "<3.4",
-            "symfony/yaml": "<3.4"
-          },
-          "provide": {
-            "psr/container-implementation": "1.0",
-            "symfony/service-implementation": "1.0"
+            "php": "^7.1.3"
           },
           "require-dev": {
-            "symfony/config": "^4.3",
-            "symfony/expression-language": "~3.4|~4.0",
-            "symfony/yaml": "~3.4|~4.0"
-          },
-          "suggest": {
-            "symfony/config": "",
-            "symfony/expression-language": "For using expressions in service container configuration",
-            "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
-            "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them",
-            "symfony/yaml": ""
+            "symfony/process": "~3.4|~4.0"
           },
           "type": "library",
           "extra": {
@@ -896,7 +875,7 @@
           },
           "autoload": {
             "psr-4": {
-              "Symfony\\Component\\DependencyInjection\\": ""
+              "Symfony\\Component\\Dotenv\\": ""
             },
             "exclude-from-classmap": [
               "/Tests/"
@@ -916,67 +895,15 @@
               "homepage": "https://symfony.com/contributors"
             }
           ],
-          "description": "Symfony DependencyInjection Component",
+          "description": "Registers environment variables from a .env file",
           "homepage": "https://symfony.com",
-          "time": "2019-06-15 04:08:07"
+          "keywords": [
+            "dotenv",
+            "env",
+            "environment"
+          ],
+          "time": "2019-06-26 06:50:02"
         },
-      {
-        "name": "symfony/dotenv",
-        "version": "v4.3.2",
-        "source": {
-          "type": "git",
-          "url": "https://github.com/symfony/dotenv.git",
-          "reference": "c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb"
-        },
-        "dist": {
-          "type": "zip",
-          "url": "https://api.github.com/repos/symfony/dotenv/zipball/c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb",
-          "reference": "c9ea2a1c60e7db08c1d1379cd4448fd14bda11eb",
-          "shasum": ""
-        },
-        "require": {
-          "php": "^7.1.3"
-        },
-        "require-dev": {
-          "symfony/process": "~3.4|~4.0"
-        },
-        "type": "library",
-        "extra": {
-          "branch-alias": {
-            "dev-master": "4.3-dev"
-          }
-        },
-        "autoload": {
-          "psr-4": {
-            "Symfony\\Component\\Dotenv\\": ""
-          },
-          "exclude-from-classmap": [
-            "/Tests/"
-          ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-          "MIT"
-        ],
-        "authors": [
-          {
-            "name": "Fabien Potencier",
-            "email": "fabien@symfony.com"
-          },
-          {
-            "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
-          }
-        ],
-        "description": "Registers environment variables from a .env file",
-        "homepage": "https://symfony.com",
-        "keywords": [
-          "dotenv",
-          "env",
-          "environment"
-        ],
-        "time": "2019-06-26 06:50:02"
-      },
       {
             "name": "symfony/event-dispatcher",
             "version": "v4.3.2",
@@ -1906,6 +1833,62 @@
             ],
           "time": "2019-06-13 11:15:36"
         },
+      {
+        "name": "symfony/templating",
+        "version": "v4.3.2",
+        "source": {
+          "type": "git",
+          "url": "https://github.com/symfony/templating.git",
+          "reference": "b0c5295d09dfbeae3bd3f52990468587ed82785c"
+        },
+        "dist": {
+          "type": "zip",
+          "url": "https://api.github.com/repos/symfony/templating/zipball/b0c5295d09dfbeae3bd3f52990468587ed82785c",
+          "reference": "b0c5295d09dfbeae3bd3f52990468587ed82785c",
+          "shasum": ""
+        },
+        "require": {
+          "php": "^7.1.3",
+          "symfony/polyfill-ctype": "~1.8"
+        },
+        "require-dev": {
+          "psr/log": "~1.0"
+        },
+        "suggest": {
+          "psr/log-implementation": "For using debug logging in loaders"
+        },
+        "type": "library",
+        "extra": {
+          "branch-alias": {
+            "dev-master": "4.3-dev"
+          }
+        },
+        "autoload": {
+          "psr-4": {
+            "Symfony\\Component\\Templating\\": ""
+          },
+          "exclude-from-classmap": [
+            "/Tests/"
+          ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+          "MIT"
+        ],
+        "authors": [
+          {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+          },
+          {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+          }
+        ],
+        "description": "Symfony Templating Component",
+        "homepage": "https://symfony.com",
+        "time": "2019-05-30 16:10:05"
+      },
       {
         "name": "symfony/translation",
         "version": "v4.3.2",

@@ -12,10 +12,13 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class Cache
 {
-    public static function get($key)
+    public static function get($key, $callback = null)
     {
+        if ($callback == null) {
+            $callback = function () {
+            };
+        }
         $cache = new RedisAdapter(RedisAdapter::createConnection($_ENV['REDIS_DNS']));
-        return $cache->get($key, function () {
-        });
+        return $cache->get($key, $callback);
     }
 }

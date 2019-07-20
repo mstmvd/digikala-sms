@@ -1,3 +1,11 @@
 sms_send:
     path:     /sms/send
     defaults: { _controller: 'App\Controllers\SmsController::send'}
+
+failed_sms_send:
+    path:     /sms/send-failed
+    defaults: { _controller: 'App\Controllers\SmsController::sendFailed'}
+
+report:
+    path:     /report
+    defaults: { _controller: 'App\Controllers\SmsController::report'}
