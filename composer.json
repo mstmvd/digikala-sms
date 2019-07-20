@@ -21,8 +21,5 @@
     "psr-4": {
       "App\\": "app/"
     }
-  },
-  "provide": {
-    "symfony/cache-implementation": "1.0"
   }
 }

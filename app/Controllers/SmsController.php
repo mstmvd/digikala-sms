@@ -27,65 +27,19 @@ class SmsController
     {
         $number = $request->query->get('number'); // todo: validate
         $body = $request->query->get('body'); // todo: validate
-        $smsApis = Cache::get('SMS_APIS');
-        shuffle($smsApis); //shuffle sms apis for random select
-
-        //create mock http client for apis
-        $httpClient = new MockHttpClient(function ($method, $url, $options) {
-            $httpCode = rand(1, 5) == 1 ? 500 : 200; //create random http code with 20% chance of fail
-            return new MockResponse('', ['http_code' => $httpCode]);
-        });
-        $callApiRes = $this->callApi($httpClient, $number, $body, $smsApis);
-
-        $smsParams = ['number' => $number, 'body' => $body, 'api' => null, 'status' => null, 'call_at' => date('Y-m-d H:i:s')];
-
-        if ($callApiRes['success'] === null) {
-            //todo add job to sent this sms later
-            $smsParams['status'] = 'FAILED';
-        } else {
-            $smsParams['status'] = 'SENT';
-            $smsParams['api'] = $callApiRes['success']['api'];
-            $smsParams['call_at'] = $callApiRes['success']['call_at'];
-        }
-
-        //record sms
-        $sms = new Sms($smsParams);
+        $sms = new Sms(['number' => $number, 'body' => $body, 'api' => null, 'status' => null, 'call_at' => date('Y-m-d H:i:s')]);
         $sms->save();
-
-        //Log tries of sending sms
-        foreach ($callApiRes['fails'] as $fail) {
-            $smsLog = new SmsLog(['sms_id' => $sms->id, 'api' => $fail['api'], 'status' => 'FAILED', 'call_at' => $fail['call_at']]);
-            $smsLog->save();
-        }
-        if ($callApiRes['success']) {
-            $smsLog = new SmsLog(['sms_id' => $sms->id, 'api' => $callApiRes['success']['api'], 'status' => 'SENT', 'call_at' => $callApiRes['success']['call_at']]);
-            $smsLog->save();
-        }
-
-        return new JsonResponse(['message' => $smsParams['status'] === 'SENT' ? 'sms sent' : 'sms send failed'], $smsParams['status'] === 'SENT' ? 200 : 504);
+        $status = $this->sendSms($sms);
+        return new JsonResponse(['message' => $status === 'SENT' ? 'sms sent' : 'sms send failed'], $status === 'SENT' ? 200 : 504);
     }
 
-    private function callApi($httpClient, $number, $body, $smsApis, $i = 0)
+    public function sendFailed()
     {
-        static $res = ['fails' => [], 'success' => null];
-        if ($i >= sizeof($smsApis)) {
-            return $res;
+        $failedSms = Sms::where('status', 'FAILED')->get();
+        foreach ($failedSms as $sms) {
+            $this->sendSms($sms);
         }
-        try {
-            $api = $smsApis[$i];
-            $callAt = date('Y-m-d H:i:s');
-            $response = $httpClient->request('GET', $api, ['query' => ['number' => $number, 'body' => $body]]);
-            if (floor($response->getStatusCode() / 100) == 2) {
-                $res['success'] = ['api' => $api, 'call_at' => $callAt];
-                return $res;
-            } else {
-                $res['fails'][] = ['api' => $api, 'call_at' => $callAt];
-                return $this->callApi($httpClient, $number, $body, $smsApis, $i + 1);
-            }
-        } catch (TransportExceptionInterface $e) {
-            $res['fails'][] = ['api' => $api, 'call_at' => $callAt];
-            return $this->callApi($httpClient, $number, $body, $smsApis, $i + 1);
-        }
+        return new JsonResponse(['message' => 'job done']);
     }
 
     public function report(Request $request)
@@ -145,5 +99,71 @@ class SmsController
             'api_fail_ratio' => $apiFailRatio,
             'top10' => $top10
         ]));
+    }
+
+    /**
+     * @param $sms
+     * @return string
+     */
+    private function sendSms($sms)
+    {
+        $smsApis = Cache::get('SMS_APIS');
+        shuffle($smsApis); //shuffle sms apis for random select
+
+        //create mock http client for apis
+        $httpClient = new MockHttpClient(function ($method, $url, $options) {
+            $httpCode = rand(1, 5) == 1 ? 500 : 200; //create random http code with 20% chance of fail
+            return new MockResponse('', ['http_code' => $httpCode]);
+        });
+        $callApiRes = $this->callApi($httpClient, $sms, $smsApis);
+
+
+        $smsParams = [];
+        if ($callApiRes['success'] === null) {
+            //todo add job to sent this sms later
+            $smsParams['status'] = 'FAILED';
+        } else {
+            $smsParams['status'] = 'SENT';
+            $smsParams['api'] = $callApiRes['success']['api'];
+            $smsParams['call_at'] = $callApiRes['success']['call_at'];
+        }
+
+        //update sms
+        $sms->fill($smsParams);
+        $sms->save();
+
+        //Log tries of sending sms
+        foreach ($callApiRes['fails'] as $fail) {
+            $smsLog = new SmsLog(['sms_id' => $sms->id, 'api' => $fail['api'], 'status' => 'FAILED', 'call_at' => $fail['call_at']]);
+            $smsLog->save();
+        }
+        if ($callApiRes['success']) {
+            $smsLog = new SmsLog(['sms_id' => $sms->id, 'api' => $callApiRes['success']['api'], 'status' => 'SENT', 'call_at' => $callApiRes['success']['call_at']]);
+            $smsLog->save();
+        }
+        return $smsParams['status'];
+    }
+
+    private function callApi($httpClient, $sms, $smsApis, $i = 0)
+    {
+        static $res = ['fails' => [], 'success' => null];
+        if ($i >= sizeof($smsApis)) {
+            return $res;
+        }
+        try {
+            $api = $smsApis[$i];
+            $callAt = date('Y-m-d H:i:s');
+            $response = $httpClient->request('GET', $api, ['query' => ['number' => $sms->number, 'body' => $sms->body]]);
+            if (floor($response->getStatusCode() / 100) == 2) {
+                $res['success'] = ['api' => $api, 'call_at' => $callAt];
+                return $res;
+            } else {
+                $res['fails'][] = ['api' => $api, 'call_at' => $callAt];
+                return $this->callApi($httpClient, $sms, $smsApis, $i + 1);
+            }
+        } catch (TransportExceptionInterface $e) {
+            $res['fails'][] = ['api' => $api, 'call_at' => $callAt];
+            return $this->callApi($httpClient, $sms, $smsApis, $i + 1);
+        }
     }
 }
