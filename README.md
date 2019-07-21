@@ -5,7 +5,7 @@
 * Redis
 * Mysql 5.7
 
-#Setup
+# Setup
 ```bash
 git clone https://github.com/mstmvd/digikala-sms
 cd digikala-sms
@@ -17,7 +17,7 @@ Create a database in mysql and run:
 mysql -u<user> -p<pass> <database> < digikala.sql
 ```
 
-#Run
+# Run
 
 ```bash
 php -S localhost:8000
