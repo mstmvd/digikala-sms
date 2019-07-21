@@ -120,7 +120,6 @@ class SmsController
 
         $smsParams = [];
         if ($callApiRes['success'] === null) {
-            //todo add job to sent this sms later
             $smsParams['status'] = 'FAILED';
         } else {
             $smsParams['status'] = 'SENT';
