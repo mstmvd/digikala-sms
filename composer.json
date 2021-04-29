@@ -1,6 +1,6 @@
 {
   "require": {
-    "illuminate/database": "^5.8",
+    "illuminate/database": "^6.20",
     "predis/predis": "^1.1",
     "symfony/cache": "^4.3",
     "symfony/config": "^4.3",
